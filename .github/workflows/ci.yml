@@ -1,36 +1,25 @@
 name: ci
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   workflow_call:
     outputs:
       image-tag:
-        description: "image tag"
+        description: image tag
         value: ${{ jobs.build-and-test.outputs.image-tag }}
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # need this for OIDC
+      id-token: write
       contents: read
     environment: main
     outputs:
-      image-tag: ${{ steps.set-image-tag.outputs.IMAGE_TAG }} 
+      image-tag: ${{ steps.set-image-tag.outputs.IMAGE_TAG }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      # TODO
-      # Configure AWS credentials
-
-            # Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ vars.AWS_REGION }}
-      # CloudFormation Lint
-      # CloudFormation Static Analysis
-      # Build docker images
-      # Set new image tag
-      # Scan new image
-      # Generate summary
